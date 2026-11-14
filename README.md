@@ -50,3 +50,10 @@ Reading shape:
 ## The awkward edge
 
 The first sample after construction (or after `start()`) has no previous cpu reading to subtract from, so `cpu.user` and `cpu.system` are both `0`. The second sample onwards carries real deltas. If you need absolute cpu totals, call `process.cpuUsage()` yourself; this library deliberately reports deltas so that consecutive readings can be summed without knowing the process start time.
+
+## Design notes
+
+The window stores values eagerly rather than keeping running aggregates. Running
+sums drift with floating point over long streams, and recomputing from a small
+buffer is cheap enough that the drift is not worth the speed.
+
